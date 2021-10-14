@@ -1,5 +1,4 @@
 
-
 const makePlayer = (playerName, mark, turn, playerWins) => {
     const getplayerName = () => playerName;
     const getMark = () => mark;
@@ -8,8 +7,8 @@ const makePlayer = (playerName, mark, turn, playerWins) => {
     return {getplayerName, getMark, getTurn, getPlayerWins};
 };
 
-const X = makePlayer("X", "&#215;", true, 0);
-const O = makePlayer("O", "&#11096;", false, 0);
+const X = makePlayer("&#215;", "&#215;", true, 0);
+const O = makePlayer("&#11096;", "&#11096;", false, 0);
 
 let currentPlayer = X;
 
@@ -24,23 +23,18 @@ const init = (() => {
     return {board, restart}
 })();
 
-const restart = () => {
-
-}
 const turn = () => {  
-    if (currentPlayer.getplayerName() === "X") {
+    if (currentPlayer.getplayerName() === "&#215;") {
         return currentPlayer = O;
     }
     else {
         return currentPlayer = X;
-    }
-    
-
-}
+    }  
+};
 
 //Modules
 
-const placeMarker = (() => {
+/*const placeMarker = (() => {
 
     let place = () =>{
         document.querySelectorAll('.cell').forEach(cell => cell.addEventListener('click', e => {
@@ -50,19 +44,18 @@ const placeMarker = (() => {
             else {
             init.board[e.target.id] = `${currentPlayer.getplayerName()}`;
             e.target.innerHTML = currentPlayer.getMark();
-            winGame.win();
-            
-            
+            winGame.win();           
             }
         }));
         
     };
-//check for win
     return {place};
-})();
+})();*/
 
 const winGame = ((player) => {
+    let gameOn = true;
     let board = init.board;
+
     const winningPatterns = [
         [0,1,2],
         [3,4,5],
@@ -74,12 +67,13 @@ const winGame = ((player) => {
         [2,4,6]
     ];
 
-    const checkWin = () => {winningPatterns.forEach((pattern) => {
+    const checkWin = () => {
+        
+        winningPatterns.forEach((pattern) => {
         let i = pattern[0], j = pattern[1], k = pattern[2];
         if(board[i]!="" && board[i]==board[j] && board[j]==board[k]) {
-            console.log(`Player ${currentPlayer.getplayerName()} wins.`);
-
-            document.querySelector(".winner").innerHTML= `winner is: ${currentPlayer.getplayerName()}`;
+            
+            document.querySelector(".winner").innerHTML= `winner is: ${board[i]}`;
             
             return true;
         }
@@ -88,7 +82,8 @@ const winGame = ((player) => {
 
     const win = () => {
     //if any winningPatterns in playerMarkList => win
-        if (checkWin()) {
+        if (checkWin()=== true) {
+            console.log("WOOOOOOOO");
             init.restart();
         }
         //else if freeCell == true = > switchPlayer
@@ -101,7 +96,20 @@ const winGame = ((player) => {
             return "Draw"
         };
     };
-return {win};
+
+    let place = () =>{
+        document.querySelectorAll('.cell').forEach(cell => cell.addEventListener('click', e => {
+            if (init.board[e.target.id] !== "") {
+                console.log("That cell isn't available, choose another");
+            }
+            else {
+            init.board[e.target.id] = `${currentPlayer.getplayerName()}`;
+            e.target.innerHTML = currentPlayer.getMark();
+            win();           
+            }
+        }));  
+    };
+return {place, win, gameOn};
 })();
 
 let makeAI = () => {
@@ -109,6 +117,8 @@ let makeAI = () => {
 };
 
 // Game logic
+
+
 init;
-placeMarker.place(currentPlayer.getMark());
+winGame.place(currentPlayer.getMark());
 
