@@ -40,4 +40,12 @@ body {
 
 .cell:hover {
     box-shadow: 0 5px 15px rgba(145, 92, 182, .4);
+    background-color: rgba(105, 95, 202, 0.4);
+}
+
+.cell:active {
+    box-shadow: 0 5px 15px rgba(145, 92, 182, .4);
+    background-color: rgba(5, 143, 39, 0.5);
+    transform: translateY(2px) ;
+    animation-timing-function: ease-out;
 }

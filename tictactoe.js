@@ -31,9 +31,14 @@ const placeMarker = (() => {
 
     let place = () =>{
         document.querySelectorAll('.cell').forEach(cell => cell.addEventListener('click', e => {
+            if (init.board[e.target.id] !== "") {
+                console.log("That cell isn't available, choose another");
+            }
+            else {
             init.board[e.target.id] = `${currentPlayer.getplayerName()}`;
             e.target.innerHTML = currentPlayer.getMark();
             turn();
+            }
         }));
         
     };
