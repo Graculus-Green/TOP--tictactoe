@@ -1,7 +1,4 @@
-const init = (() => {
-    let board = ["","","","","","","","","",];
-    return {board}
-})();
+
 
 const makePlayer = (playerName, mark, turn, playerWins) => {
     const getplayerName = () => playerName;
@@ -14,8 +11,22 @@ const makePlayer = (playerName, mark, turn, playerWins) => {
 const X = makePlayer("X", "&#215;", true, 0);
 const O = makePlayer("O", "&#11096;", false, 0);
 
-let currentPlayer = O;
+let currentPlayer = X;
 
+const init = (() => {
+    let board = ["","","","","","","","","",];
+
+    const restart = () => {   
+        // Not working yet
+        init.board = ["","","","","","","","","",];
+    }
+    document.querySelector(".currentPlayer").innerHTML = `Current player is :${currentPlayer.getplayerName()}`;
+    return {board, restart}
+})();
+
+const restart = () => {
+
+}
 const turn = () => {  
     if (currentPlayer.getplayerName() === "X") {
         return currentPlayer = O;
@@ -23,6 +34,8 @@ const turn = () => {
     else {
         return currentPlayer = X;
     }
+    
+
 }
 
 //Modules
@@ -37,18 +50,19 @@ const placeMarker = (() => {
             else {
             init.board[e.target.id] = `${currentPlayer.getplayerName()}`;
             e.target.innerHTML = currentPlayer.getMark();
-            turn();
+            winGame.win();
+            
+            
             }
         }));
         
     };
-//check valid
-//place mark
 //check for win
     return {place};
 })();
 
 const winGame = ((player) => {
+    let board = init.board;
     const winningPatterns = [
         [0,1,2],
         [3,4,5],
@@ -59,23 +73,28 @@ const winGame = ((player) => {
         [0,4,8],
         [2,4,6]
     ];
-    const checkWin = () => {winningPatterns.forEach(pattern => pattern.forEach(mark => {
-        if (mark => mark.every( v => v === mark[0])) {
-            if (mark !== "") {
-                return true;
-            }
-            return true
+
+    const checkWin = () => {winningPatterns.forEach((pattern) => {
+        let i = pattern[0], j = pattern[1], k = pattern[2];
+        if(board[i]!="" && board[i]==board[j] && board[j]==board[k]) {
+            console.log(`Player ${currentPlayer.getplayerName()} wins.`);
+
+            document.querySelector(".winner").innerHTML= `winner is: ${currentPlayer.getplayerName()}`;
+            
+            return true;
         }
-    })
-    )};
+      });
+    };
+
     const win = () => {
     //if any winningPatterns in playerMarkList => win
-        if (checkWin === true) {
-            return console.log( `Player ${currentPlayer} wins`);
+        if (checkWin()) {
+            init.restart();
         }
         //else if freeCell == true = > switchPlayer
-        else if (init.board.includes("")) {
-            return turn();
+        else if (board.includes("")) {
+            turn();
+            return document.querySelector(".currentPlayer").innerHTML = `Current player is :${currentPlayer.getplayerName()}`;
         }
         //else => draw
         else {
@@ -92,4 +111,4 @@ let makeAI = () => {
 // Game logic
 init;
 placeMarker.place(currentPlayer.getMark());
-winGame.win();
+
