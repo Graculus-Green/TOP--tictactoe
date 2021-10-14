@@ -15,12 +15,9 @@ let currentPlayer = X;
 const init = (() => {
     let board = ["","","","","","","","","",];
 
-    const restart = () => {   
-        // Not working yet
-        init.board = ["","","","","","","","","",];
-    }
+
     document.querySelector(".currentPlayer").innerHTML = `Current player is :${currentPlayer.getplayerName()}`;
-    return {board, restart}
+    return {board}
 })();
 
 
@@ -44,10 +41,9 @@ const winGame = ((player) => {
 
     const checkWin = () => {
         
-
         for (let pattern = 0; pattern < winningPatterns.length; pattern++) {
             let i = winningPatterns[pattern][0], j = winningPatterns[pattern][1], k = winningPatterns[pattern][2];
-            if(board[i]!="" && board[i]==board[j] && board[j]==board[k]) {
+            if(board[i]!=="" && board[i]==board[j] && board[j]==board[k]) {
                 
                 return true;
             };
@@ -67,11 +63,9 @@ const winGame = ((player) => {
     //if any winningPatterns in playerMarkList => win
         if (checkWin()) {
             //document.querySelector(".winner").innerHTML= `winner is: ${winMark}`;
-            init.board = ["_", `${currentPlayer.getplayerName()}`, "-","_", "I","S","W","I","N"]
+            init.board = ["_", `${currentPlayer.getplayerName()}`, "_","_", "I","S","W","I","N"]
             return document.querySelector(".winner").innerHTML= `The winner is: ${currentPlayer.getplayerName()}`;
 
-
-            console.log("WOOOOOOOO");
             //init.restart();
         }
         //else if freeCell == true = > switchPlayer
@@ -87,7 +81,9 @@ const winGame = ((player) => {
 
     let place = () =>{
         document.querySelectorAll('.cell').forEach(cell => cell.addEventListener('click', e => {
-            if (init.board[e.target.id] !== "") {
+
+            console.log(init.board);
+            if (init.board[e.target.id] != "") {
                 console.log("That cell isn't available, choose another");
             }
             else {
@@ -100,10 +96,26 @@ const winGame = ((player) => {
     return {place, gameOn};
 })();
 
+let restart = () => {
+    document.querySelector(".restart").addEventListener("click", () => {
+        let check = confirm("Are you sure you want to restart?");
+        if (check == true) {
+            init.board = ["","","","","","","","","",];
+            console.log(init.board);
+            document.querySelectorAll(".cell").forEach(cell => cell.innerHTML = "");
+            document.querySelector(".winner").innerHTML= "";
+        }
+    });
+}
+
 //let makeAI = () => {};
 
 // Game logic
 
 init;
-winGame.place(currentPlayer.getMark());
+winGame.place();
+restart();
+
+
+
 
