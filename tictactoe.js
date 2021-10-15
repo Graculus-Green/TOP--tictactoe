@@ -25,7 +25,6 @@ const init = (() => {
 //Modules
 
 const winGame = ((player) => {
-    let gameOn = true;
     let board = init.board;
 
     const winningPatterns = [
@@ -40,7 +39,6 @@ const winGame = ((player) => {
     ];
 
     const checkWin = () => {
-        
         for (let pattern = 0; pattern < winningPatterns.length; pattern++) {
             let i = winningPatterns[pattern][0], j = winningPatterns[pattern][1], k = winningPatterns[pattern][2];
             if(board[i]!=="" && board[i]==board[j] && board[j]==board[k]) {
@@ -61,9 +59,10 @@ const winGame = ((player) => {
 
     const win = () => {
     //if any winningPatterns in playerMarkList => win
+        
         if (checkWin()) {
             //document.querySelector(".winner").innerHTML= `winner is: ${winMark}`;
-            init.board = ["_", `${currentPlayer.getplayerName()}`, "_","_", "I","S","W","I","N"]
+            board = ["_", `${currentPlayer.getplayerName()}`, "_","_", "I","S","W","I","N"]
             return document.querySelector(".winner").innerHTML= `The winner is: ${currentPlayer.getplayerName()}`;
 
             //init.restart();
@@ -75,38 +74,45 @@ const winGame = ((player) => {
         }
         //else => draw
         else {
-            return document.querySelector(".winner").innerHTML= `It's a draw.`;
+            return document.querySelector(".winner").innerHTML= `It's a draw!`;
         };
     };
 
     let place = () =>{
         document.querySelectorAll('.cell').forEach(cell => cell.addEventListener('click', e => {
 
-            console.log(init.board);
-            if (init.board[e.target.id] != "") {
+            console.log(board);
+            if (board[e.target.id] !== "") {
                 console.log("That cell isn't available, choose another");
             }
             else {
-            init.board[e.target.id] = `${currentPlayer.getplayerName()}`;
+            board[e.target.id] = `${currentPlayer.getplayerName()}`;
             e.target.innerHTML = currentPlayer.getMark();
             win();           
             }
         }));  
     };
-    return {place, gameOn};
+
+    let restart = () => {
+        document.querySelector(".restart").addEventListener("click", () => {
+            let check = confirm("Are you sure you want to restart?");
+            if (check == true) {
+                
+                document.querySelectorAll(".cell").forEach(cell => cell.innerHTML = "");
+                console.log(board);
+                document.querySelector(".winner").innerHTML= "";
+                for (let i =0; i<board.length; i++) {
+                    board[i]= "";
+                }
+                winGame.place();
+            }
+        });
+    };
+
+    return {place, restart};
 })();
 
-let restart = () => {
-    document.querySelector(".restart").addEventListener("click", () => {
-        let check = confirm("Are you sure you want to restart?");
-        if (check == true) {
-            init.board = ["","","","","","","","","",];
-            console.log(init.board);
-            document.querySelectorAll(".cell").forEach(cell => cell.innerHTML = "");
-            document.querySelector(".winner").innerHTML= "";
-        }
-    });
-}
+
 
 //let makeAI = () => {};
 
@@ -114,7 +120,7 @@ let restart = () => {
 
 init;
 winGame.place();
-restart();
+winGame.restart();
 
 
 
